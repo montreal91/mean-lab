@@ -41,6 +41,8 @@ class MlGame( object ):
                 self._PrintListOfItemsInInventory()
             elif ch == "l":
                 self._LookForSomething()
+            elif ch == "u":
+                self._lab.TryUnlockSomething( self._character.balls )
             else:
                 print( "WTF?" )
         except KeyboardInterrupt:
@@ -119,7 +121,7 @@ class MlGame( object ):
         room_list[ 8 ].west     = room_list[ 7 ]
 
         entrance                = MlRoom( 11, "Entrance" )
-        exit                    = MlRoom( 22, "Exit" )
+        exit                    = MlRoom( 22, "Exit", locked=True )
 
         entrance.north          = room_list[ 1 ]
         room_list[ 1 ].south    = entrance

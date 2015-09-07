@@ -8,8 +8,8 @@ class MlCharacter( object ):
         self._coins             = 0
         self._crap              = 0
 
-        self._find_ball_chance  = 0.4
-        self._find_coin_chance  = 0.6
+        self._find_ball_chance  = 1.00
+        self._find_coin_chance  = 1.25
 
 
     @property

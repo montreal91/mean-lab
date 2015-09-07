@@ -1,6 +1,17 @@
 
+class MlStruct:
+    pass
+
+
+UNLOCK_RETURN_CODES = MlStruct()
+
+UNLOCK_RETURN_CODES.ALREADY_UNLOCKED        = 0
+UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED   = 1
+UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS        = 2
+
+
 class MlRoom( object ):
-    def __init__( self, pk, description, mess=0, coins=0, balls=0 ):
+    def __init__( self, pk, description, mess=0, coins=0, balls=0, locked=False ):
         self._pk            = pk
         self._description   = description
         self._north         = None
@@ -9,6 +20,7 @@ class MlRoom( object ):
         self._east          = None
         self._coins         = coins
         self._balls         = balls
+        self._locked        = locked
         
         if mess < 0:
             self._mess = 0
@@ -48,7 +60,7 @@ class MlRoom( object ):
     @property
     def north( self ):
         if self._north:
-            return self._north.pk
+            return self._north
         else:
             return None
 
@@ -62,7 +74,7 @@ class MlRoom( object ):
     @property
     def south( self ):
         if self._south:
-            return self._south.pk
+            return self._south
         else:
             return None
 
@@ -76,7 +88,7 @@ class MlRoom( object ):
     @property
     def west( self ):
         if self._west:
-            return self._west.pk
+            return self._west
         else:
             return None
 
@@ -90,7 +102,7 @@ class MlRoom( object ):
     @property
     def east( self ):
         if self._east:
-            return self._east.pk
+            return self._east
         else:
             return None
 
@@ -99,6 +111,11 @@ class MlRoom( object ):
     def east( self, direction ):
         assert type( direction ) == MlRoom
         self._east = direction
+
+
+    @property
+    def locked( self ):
+        return self._locked
 
 
     def _DescribeMess( self ):
@@ -126,3 +143,13 @@ class MlRoom( object ):
             self._coins -= 1
         else:
             pass
+
+
+    def Unlock( self, balls ):
+        if balls > 2 and self._locked:
+            self._locked = False
+            return UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED
+        elif balls < 2 and self._locked:
+            return UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS
+        else:
+            return UNLOCK_RETURN_CODES.ALREADY_UNLOCKED
