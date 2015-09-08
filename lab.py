@@ -39,30 +39,38 @@ class MlLab( object ):
     def TryUnlockSomething( self, balls ):
         success_string = "You've unlocked %s, GODDAMNIT!"
         curse_string = "You don't have enough balls, dickhead!"
-        if self._UnlockNorth( balls ) == UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED:
-            print( success_string % "North" )
-            return
-        if self._UnlockNorth( balls ) == UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS:
-            print( curse_string )
-            return
-        if self._UnlockEast( balls ) == UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED:
-            print( success_string % "East" )
-            return
-        if self._UnlockEast( balls ) == UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS:
-            print( curse_string )
-            return
-        if self._UnlockSouth( balls ) == UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED:
-            print( success_string % "South" )
-            return
-        if self._UnlockSouth( balls ) == UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS:
-            print( curse_string )
-            return
-        if self._UnlockWest( balls ) == UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED:
-            print( success_string % "West" )
-            return
-        if self._UnlockWest( balls ) == UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS:
-            print( curse_string )
-            return
+        if self.current_room.north:
+            if self._UnlockNorth( balls ) == UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED:
+                print( success_string % "North" )
+                return
+            if self._UnlockNorth( balls ) == UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS:
+                print( curse_string )
+                return
+
+        if self.current_room.east:
+            if self._UnlockEast( balls ) == UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED:
+                print( success_string % "East" )
+                return
+            if self._UnlockEast( balls ) == UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS:
+                print( curse_string )
+                return
+
+        if self.current_room.south:
+            if self._UnlockSouth( balls ) == UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED:
+                print( success_string % "South" )
+                return
+            if self._UnlockSouth( balls ) == UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS:
+                print( curse_string )
+                return
+
+        if self.current_room.west:
+            if self._UnlockWest( balls ) == UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED:
+                print( success_string % "West" )
+                return
+            if self._UnlockWest( balls ) == UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS:
+                print( curse_string )
+                return
+
         print( "There is nothing to unlock, you idiot!" )
 
 

@@ -1,11 +1,12 @@
 
 import sys
 
-from random     import randint
+from random                             import randint
 
-from character  import MlCharacter
-from lab        import MlLab
-from room       import MlRoom
+from character                          import MlCharacter
+from lab                                import MlLab
+from rock_paper_scissors_lizard_spock   import MlRockPaperScissorsLizardSpock
+from room                               import MlRoom
 
 
 class MlGame( object ):
@@ -179,9 +180,16 @@ class MlGame( object ):
         print( "Press [Ctrl + C] to quit.\n" )
         while not self._lab.character_at_exit:
             self._ProcessInput()
-        print( "\nCongratulations!" )
-        print( "You've managed to find your fucking way through the mean lab." )
-        print( "Now you can fuck yourself wherever you want!\n" )
+        final_battle = MlRockPaperScissorsLizardSpock()
+        result = final_battle.Run()
+        if result is True:
+            print( "\nCongratulations!" )
+            print( "You've managed to find your fucking way through the mean lab." )
+            print( "Now you can fuck yourself wherever you want!\n" )
+        else:
+            print( "\nUnfortunately, you haven't managed to find your fucking way through the mean lab" )
+            print( "and now you will not fuck yourself wherever you want." )
+            print( "Because you are as dead as Aphrodite's cunt!\n" )
 
 
 if __name__ == '__main__':
