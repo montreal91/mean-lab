@@ -20,54 +20,17 @@ class MlLab( object ):
         return self._rooms_dict[ self._current ]
 
 
-    def _UnlockNorth( self, balls ):
-        return self.current_room.north.Unlock( balls )
-
-
-    def _UnlockSouth( self, balls ):
-        return self.current_room.south.Unlock( balls )
-
-
-    def _UnlockWest( self, balls ):
-        return self.current_room.west.Unlock( balls )
-
-
-    def _UnlockEast( self, balls ):
-        return self.current_room.east.Unlock( balls )
-
-
     def TryUnlockSomething( self, balls ):
-        success_string = "You've unlocked %s, GODDAMNIT!"
-        curse_string = "You don't have enough balls, dickhead!"
-        if self.current_room.north:
-            if self._UnlockNorth( balls ) == UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED:
-                print( success_string % "North" )
-                return
-            if self._UnlockNorth( balls ) == UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS:
-                print( curse_string )
-                return
+        success_string  = "You've unlocked %s, GODDAMNIT!"
+        curse_string    = "You don't have enough balls, dickhead!"
 
-        if self.current_room.east:
-            if self._UnlockEast( balls ) == UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED:
-                print( success_string % "East" )
-                return
-            if self._UnlockEast( balls ) == UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS:
-                print( curse_string )
-                return
+        for direction in self.current_room.directions:
+            target_room = self.current_room.GetDirection( direction )
 
-        if self.current_room.south:
-            if self._UnlockSouth( balls ) == UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED:
-                print( success_string % "South" )
+            if target_room.Unlock( balls ) == UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED:
+                print( success_string % direction )
                 return
-            if self._UnlockSouth( balls ) == UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS:
-                print( curse_string )
-                return
-
-        if self.current_room.west:
-            if self._UnlockWest( balls ) == UNLOCK_RETURN_CODES.SUCCESSFULLY_UNLOCKED:
-                print( success_string % "West" )
-                return
-            if self._UnlockWest( balls ) == UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS:
+            elif target_room.Unlock( balls ) == UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS:
                 print( curse_string )
                 return
 
@@ -94,53 +57,15 @@ class MlLab( object ):
             raise Exception( "There is no such room" )
 
 
-    def CanMoveNorth( self ):
-        return self.current_room.north is not None
+    def CanMoveDirection( self, direction ):
+        return self.current_room.GetDirection( direction ) is not None
 
 
-    def CanMoveSouth( self ):
-        return self.current_room.south is not None
-
-
-    def CanMoveWest( self ):
-        return self.current_room.west is not None
-
-
-    def CanMoveEast( self ):
-        return self.current_room.east is not None
-
-
-    def MoveNorth( self ):
-        if self.current_room.north.locked:
+    def MoveInDirection( self, direction ):
+        target_room = self.current_room.GetDirection( direction )
+        if target_room.locked:
             print( "Fuck! This way is locked." )
         else:
-            self._current = self.current_room.north.pk
-            print( "You move to:" )
-            self.current_room.description
-
-
-    def MoveSouth( self ):
-        if self.current_room.south.locked:
-            print( "Fuck! This way is locked." )
-        else:
-            self._current = self.current_room.south.pk
-            print( "You move to:" )
-            self.current_room.description
-
-
-    def MoveWest( self ):
-        if self.current_room.west.locked:
-            print( "Fuck! This way is locked." )
-        else:
-            self._current = self.current_room.west.pk
-            print( "You move to:" )
-            self.current_room.description
-
-
-    def MoveEast( self ):
-        if self.current_room.east.locked:
-            print( "Fuck! This way is locked." )
-        else:
-            self._current = self.current_room.east.pk
+            self._current = target_room.pk
             print( "You move to:" )
             self.current_room.description

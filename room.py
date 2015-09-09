@@ -12,15 +12,12 @@ UNLOCK_RETURN_CODES.NOT_ENOUGH_BALLS        = 2
 
 class MlRoom( object ):
     def __init__( self, pk, description, mess=0, coins=0, balls=0, locked=False ):
-        self._pk            = pk
-        self._description   = description
-        self._north         = None
-        self._south         = None
-        self._west          = None
-        self._east          = None
-        self._coins         = coins
-        self._balls         = balls
-        self._locked        = locked
+        self._pk                = pk
+        self._description       = description
+        self._direction_dict    = dict()
+        self._coins             = coins
+        self._balls             = balls
+        self._locked            = locked
         
         if mess < 0:
             self._mess = 0
@@ -58,59 +55,21 @@ class MlRoom( object ):
 
 
     @property
-    def north( self ):
-        if self._north:
-            return self._north
+    def directions( self ):
+        return [ key for key in self._direction_dict ]
+    
+
+
+    def SetDirection( self, direction, room ):
+        assert isinstance( room, MlRoom )
+        self._direction_dict[ direction ] = room
+
+
+    def GetDirection( self, direction ):
+        if direction in self._direction_dict:
+            return self._direction_dict[ direction ]
         else:
             return None
-
-
-    @north.setter
-    def north( self, direction ):
-        assert type( direction ) == MlRoom
-        self._north = direction
-
-
-    @property
-    def south( self ):
-        if self._south:
-            return self._south
-        else:
-            return None
-
-
-    @south.setter
-    def south( self, direction ):
-        assert type( direction ) == MlRoom
-        self._south = direction
-
-
-    @property
-    def west( self ):
-        if self._west:
-            return self._west
-        else:
-            return None
-
-
-    @west.setter
-    def west( self, direction ):
-        assert type( direction ) == MlRoom
-        self._west = direction
-
-
-    @property
-    def east( self ):
-        if self._east:
-            return self._east
-        else:
-            return None
-
-
-    @east.setter
-    def east( self, direction ):
-        assert type( direction ) == MlRoom
-        self._east = direction
 
 
     @property

@@ -6,7 +6,14 @@ from random                             import randint
 from character                          import MlCharacter
 from lab                                import MlLab
 from rock_paper_scissors_lizard_spock   import MlRockPaperScissorsLizardSpock
-from room                               import MlRoom
+from room                               import MlRoom, MlStruct
+
+DIRECTIONS          = MlStruct()
+
+DIRECTIONS.NORTH    = "North"
+DIRECTIONS.EAST     = "East"
+DIRECTIONS.SOUTH    = "South"
+DIRECTIONS.WEST     = "West"
 
 
 class MlGame( object ):
@@ -28,14 +35,14 @@ class MlGame( object ):
     def _ProcessInput( self ):
         try:
             ch = str( input( ">" ) )
-            if ch == "n" and self._lab.CanMoveNorth():
-                self._lab.MoveNorth()
-            elif ch == "s" and self._lab.CanMoveSouth():
-                self._lab.MoveSouth()
-            elif ch == "w" and self._lab.CanMoveWest():
-                self._lab.MoveWest()
-            elif ch == "e" and self._lab.CanMoveEast():
-                self._lab.MoveEast()
+            if ch == "n" and self._lab.CanMoveDirection( DIRECTIONS.NORTH ):
+                self._lab.MoveInDirection( DIRECTIONS.NORTH )
+            elif ch == "s" and self._lab.CanMoveDirection( DIRECTIONS.SOUTH ):
+                self._lab.MoveInDirection( DIRECTIONS.SOUTH )
+            elif ch == "w" and self._lab.CanMoveDirection( DIRECTIONS.WEST ):
+                self._lab.MoveInDirection( DIRECTIONS.WEST )
+            elif ch == "e" and self._lab.CanMoveDirection( DIRECTIONS.EAST ):
+                self._lab.MoveInDirection( DIRECTIONS.EAST )
             elif ch == "can":
                 self._PrintListOfPossibilities()
             elif ch == "i":
@@ -56,14 +63,14 @@ class MlGame( object ):
         print( "You can look for some crap." )
         print( "You can look into your inventory." )
         print( "You can move to:" )
-        if self._lab.CanMoveNorth():
-            print( "\tNorth." )
-        if self._lab.CanMoveSouth():
-            print( "\tSouth." )
-        if self._lab.CanMoveWest():
-            print( "\tWest." )
-        if self._lab.CanMoveEast():
-            print( "\tEast." )
+        if self._lab.CanMoveDirection( DIRECTIONS.NORTH ):
+            print( "\t%s." % DIRECTIONS.NORTH )
+        if self._lab.CanMoveDirection( DIRECTIONS.SOUTH ):
+            print( "\t%s." % DIRECTIONS.SOUTH )
+        if self._lab.CanMoveDirection( DIRECTIONS.WEST ):
+            print( "\t%s." % DIRECTIONS.WEST )
+        if self._lab.CanMoveDirection( DIRECTIONS.EAST ):
+            print( "\t%s." % DIRECTIONS.EAST )
         print( "Or you can fuck yourself right here." )
 
 
@@ -94,41 +101,41 @@ class MlGame( object ):
                 )
             room_list.append( room )
 
-        room_list[ 0 ].north    = room_list[ 3 ]
-        room_list[ 0 ].east     = room_list[ 1 ]
+        room_list[ 0 ].SetDirection( DIRECTIONS.NORTH, room_list[ 3 ] )
+        room_list[ 0 ].SetDirection( DIRECTIONS.EAST, room_list[ 1 ] )
 
-        room_list[ 1 ].north    = room_list[ 4 ]
-        room_list[ 1 ].west     = room_list[ 0 ]
+        room_list[ 1 ].SetDirection( DIRECTIONS.NORTH, room_list[ 4 ] )
+        room_list[ 1 ].SetDirection( DIRECTIONS.WEST, room_list[ 0 ] )
 
-        room_list[ 2 ].north    = room_list[ 5 ]
+        room_list[ 2 ].SetDirection( DIRECTIONS.NORTH, room_list[ 5 ] )
 
-        room_list[ 3 ].east     = room_list[ 4 ]
-        room_list[ 3 ].south    = room_list[ 0 ]
+        room_list[ 3 ].SetDirection( DIRECTIONS.EAST, room_list[ 4 ] )
+        room_list[ 3 ].SetDirection( DIRECTIONS.SOUTH, room_list[ 0 ] )
 
-        room_list[ 4 ].east     = room_list[ 5 ]
-        room_list[ 4 ].south    = room_list[ 1 ]
-        room_list[ 4 ].west     = room_list[ 3 ]
+        room_list[ 4 ].SetDirection( DIRECTIONS.EAST, room_list[ 5 ] )
+        room_list[ 4 ].SetDirection( DIRECTIONS.SOUTH, room_list[ 1 ] )
+        room_list[ 4 ].SetDirection( DIRECTIONS.WEST, room_list[ 3 ] )
 
-        room_list[ 5 ].north    = room_list[ 8 ]
-        room_list[ 5 ].south    = room_list[ 2 ]
-        room_list[ 5 ].west     = room_list[ 4 ]
+        room_list[ 5 ].SetDirection( DIRECTIONS.NORTH, room_list[ 8 ] )
+        room_list[ 5 ].SetDirection( DIRECTIONS.SOUTH, room_list[ 2 ] )
+        room_list[ 5 ].SetDirection( DIRECTIONS.WEST, room_list[ 4 ] )
 
-        room_list[ 6 ].east     = room_list[ 7 ]
+        room_list[ 6 ].SetDirection( DIRECTIONS.EAST, room_list[ 7 ] )
 
-        room_list[ 7 ].east     = room_list[ 8 ]
-        room_list[ 7 ].west     = room_list[ 6 ]
+        room_list[ 7 ].SetDirection( DIRECTIONS.EAST, room_list[ 8 ] )
+        room_list[ 7 ].SetDirection( DIRECTIONS.WEST, room_list[ 6 ] )
 
-        room_list[ 8 ].south    = room_list[ 5 ]
-        room_list[ 8 ].west     = room_list[ 7 ]
+        room_list[ 8 ].SetDirection( DIRECTIONS.SOUTH, room_list[ 5 ] )
+        room_list[ 8 ].SetDirection( DIRECTIONS.WEST, room_list[ 7 ] )
 
         entrance                = MlRoom( 11, "Entrance" )
         exit                    = MlRoom( 22, "Exit", locked=True )
 
-        entrance.north          = room_list[ 1 ]
-        room_list[ 1 ].south    = entrance
+        entrance.SetDirection( DIRECTIONS.NORTH, room_list[ 1 ] )
+        room_list[ 1 ].SetDirection( DIRECTIONS.SOUTH, entrance )
 
-        exit.south              = room_list[ 7 ]
-        room_list[ 7 ].north    = exit
+        exit.SetDirection( DIRECTIONS.SOUTH, room_list[ 7 ] )
+        room_list[ 7 ].SetDirection( DIRECTIONS.NORTH, exit )
         
         self._lab.AddRoom( entrance )
         self._lab.AddRoom( exit )
